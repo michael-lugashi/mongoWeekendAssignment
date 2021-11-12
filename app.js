@@ -10,6 +10,7 @@ mongoose
   })
   .catch((err) => console.log(err));
 
+// ADD DOCUMENTS
 function addStudent(firstName, sureName, birth, phone, gender, courses) {
   const student = new Student({
     name: firstName,
@@ -28,45 +29,131 @@ function addStudent(firstName, sureName, birth, phone, gender, courses) {
 // addStudent('Oryan', 'Levy', '02/04/1998', '0542305321', 'male', ['JavaScript', 'Law']);
 // addStudent('Yahalom', 'Cohen', '03/11/1993', '0542305392', 'Female', ['Java', 'Law']);
 
+// FIND DOCUMENTS
 function findAll() {
-  return Student.find();
+  Student.find().then((students) => {
+    console.log(students);
+  });
 }
-// console.log(findAll())
+
+// findAll()
 
 function findAllIdo() {
-  Student.find({ name: 'Ido' }).then(student=>{
-      console.log(student)
-  })
+  Student.find({ name: 'Ido' }).then((student) => {
+    console.log(student);
+  });
 }
 // findAllIdo();
 
-function includeLaw(){
-    Student.find({ courses: { $in: ["Law"]}}).then(student => {
-        console.log(student)
-    })
+function includeLaw() {
+  Student.find({ courses: { $in: ['Law'] } }).then((student) => {
+    console.log(student);
+  });
 }
 // includeLaw()
 
-function genderCourse(){
-    Student.find({ courses: { $in: ["Java"]}, gender: 'Female'}).then(student => {
-        console.log(student)
-    })
+function genderCourse() {
+  Student.find({ courses: { $in: ['Java'] }, gender: 'Female' }).then(
+    (student) => {
+      console.log(student);
+    }
+  );
 }
 // genderCourse()
 
-function birthLessThan(){
-    Student.find({ birth: { $lte: new Date("1998-05-05")}}).then(student => {
-        console.log(student)
-    })
+function birthLessThan() {
+  Student.find({ birth: { $lte: new Date('1998-05-05') } }).then((student) => {
+    console.log(student);
+  });
 }
 
 // birthLessThan()
 
-
-function startPhone(){
-    Student.find({ phone: { $regex: "^054", $options: "i" }}).then(student => {
-        console.log(student)
-    })
+function startPhone() {
+  Student.find({ phone: { $regex: '^054', $options: 'i' } }).then((student) => {
+    console.log(student);
+  });
 }
 // startPhone()
+
+// UPDATE DOCUMENTS
+function updateYaholomCourses() {
+  Student.findOneAndUpdate(
+    { name: 'Yahalom' },
+    {
+      $push: { courses: 'JavaScript' },
+    },
+    { new: true }
+  ).then((student) => {
+    console.log(student);
+  });
+}
+// updateYaholomCourses();
+
+function updateKorenBirthDate() {
+  Student.findOneAndUpdate(
+    { name: 'Koren' },
+    {
+      birth: new Date('02/12/1998'),
+    },
+    {
+      new: true,
+    }
+  ).then((student) => {
+    console.log(student);
+  });
+}
+// updateKorenBirthDate();
+
+function findNamesWithLetterO() {
+  Student.find({ name: { $regex: 'o', $options: 'i' } })
+    .then((student) => {
+      console.log(student);
+    })
+    .catch((err) => {
+      console.log(err);
+    });
+}
+
+// findNamesWithLetterO();
+
+function findSureNameWithLetter() {
+  Student.find({
+    $or: [
+      { name: { $regex: 'h', $options: 'i' } },
+      { name: { $regex: 'y', $options: 'i' } },
+    ],
+  })
+    .then((student) => {
+      console.log(student);
+    })
+    .catch((err) => {
+      console.log(err);
+    });
+}
+
+// findSureNameWithLetter();
+
+function deleteIdo() {
+  Student.deleteOne({ name: 'Ido' })
+    .then((student) => {
+      console.log(student);
+    })
+    .catch((err) => {
+      console.log(err);
+    });
+}
+// deleteIdo();
+
+function deleteByDate() {
+  Student.deleteOne({ birth: new Date('02/04/1998') })
+    .then((student) => {
+      console.log(student);
+    })
+    .catch((err) => {
+      console.log(err);
+    });
+}
+
+// deleteByDate();
 console.log('finished');
